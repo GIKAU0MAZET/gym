@@ -1,0 +1,5 @@
+DB_HOST = "localhost"
+DB_PORT = "5432"
+DB_NAME = "sport_gym"
+DB_USER = "postgres"
+DB_PASSWORD = "maksimov22820"

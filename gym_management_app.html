@@ -1,0 +1,506 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--color-background-tertiary);color:var(--color-text-primary);min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;padding:0;flex-shrink:0}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sidebar-logo h2{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.sidebar-logo p{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.sidebar-nav{flex:1;padding:12px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:14px;color:var(--color-text-secondary);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.nav-item:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.nav-item.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-left-color:#378ADD}
+.nav-item i{font-size:17px}
+.sidebar-footer{padding:16px 20px;border-top:0.5px solid var(--color-border-tertiary)}
+.user-badge{display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#185FA5;flex-shrink:0}
+.user-info p{font-size:13px;font-weight:500}
+.user-info span{font-size:11px;color:var(--color-text-secondary)}
+.logout-btn{margin-top:10px;width:100%;display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;color:var(--color-text-secondary);background:none;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer}
+.logout-btn:hover{background:var(--color-background-secondary)}
+.main{flex:1;overflow:auto}
+.topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-size:18px;font-weight:500}
+.content{padding:24px 28px}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--color-background-tertiary)}
+.login-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:36px;width:360px}
+.login-card h2{font-size:20px;font-weight:500;margin-bottom:6px}
+.login-card p{font-size:14px;color:var(--color-text-secondary);margin-bottom:24px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;color:var(--color-text-secondary);margin-bottom:6px}
+.form-group input,.form-group select{width:100%;padding:9px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#378ADD;box-shadow:0 0 0 2px rgba(55,138,221,.15)}
+.btn{padding:9px 18px;border-radius:var(--border-radius-md);font-size:14px;cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.btn-primary{background:#378ADD;color:#fff;border:none}
+.btn-primary:hover{background:#185FA5}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-outline{background:none;border:0.5px solid var(--color-border-secondary);color:var(--color-text-primary)}
+.btn-outline:hover{background:var(--color-background-secondary)}
+.btn-danger{background:none;border:0.5px solid var(--color-border-tertiary);color:#E24B4A;font-size:12px;padding:5px 10px;border-radius:var(--border-radius-md);cursor:pointer}
+.btn-danger:hover{background:#FCEBEB}
+.role-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.role-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:14px;cursor:pointer;text-align:center;transition:all .15s}
+.role-card:hover{border-color:#378ADD;background:var(--color-background-secondary)}
+.role-card.selected{border-color:#378ADD;border-width:2px;background:#E6F1FB}
+.role-card i{font-size:24px;color:#378ADD;margin-bottom:8px;display:block}
+.role-card span{font-size:13px;font-weight:500;display:block}
+.role-card small{font-size:11px;color:var(--color-text-secondary)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:16px}
+.metric-card .label{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.metric-card .value{font-size:24px;font-weight:500}
+.metric-card .sub{font-size:12px;color:var(--color-text-secondary);margin-top:4px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-header h3{font-size:15px;font-weight:500}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--color-text-secondary);font-weight:500;text-align:left;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+td{font-size:13px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-active{background:#EAF3DE;color:#3B6D11}
+.badge-inactive{background:#F1EFE8;color:#5F5E5A}
+.badge-pending{background:#FAEEDA;color:#854F0B}
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--color-background-primary);border-radius:var(--border-radius-lg);padding:28px;width:440px;border:0.5px solid var(--color-border-tertiary)}
+.modal h3{font-size:17px;font-weight:500;margin-bottom:18px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.page{display:none}.page.active{display:block}
+.empty{text-align:center;padding:40px;color:var(--color-text-secondary);font-size:14px}
+.tabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:20px}
+.tab{padding:10px 18px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.tab.active{color:#378ADD;border-bottom-color:#378ADD}
+.access-denied{text-align:center;padding:60px;color:var(--color-text-secondary)}
+.access-denied i{font-size:40px;display:block;margin-bottom:12px;color:#D85A30}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+</style>
+
+<div id="root"></div>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+const DATA = {
+  users:[
+    {id:1,name:'Иван Петров',role:'admin',login:'admin',pass:'1234',initials:'ИП'},
+    {id:2,name:'Алексей Смирнов',role:'director',login:'director',pass:'1234',initials:'АС'},
+    {id:3,name:'Мария Козлова',role:'trainer',login:'trainer',pass:'1234',initials:'МК'},
+  ],
+  clients:[
+    {id:1,fname:'Дмитрий',lname:'Волков',phone:'+7 900 123-45-67',email:'d.volkov@mail.ru',reg:'2024-01-15',status:'active'},
+    {id:2,fname:'Анна',lname:'Белова',phone:'+7 905 987-65-43',email:'a.belova@mail.ru',reg:'2024-02-20',status:'active'},
+    {id:3,fname:'Сергей',lname:'Новиков',phone:'+7 911 555-12-34',email:'s.novikov@mail.ru',reg:'2024-03-10',status:'inactive'},
+    {id:4,fname:'Ольга',lname:'Морозова',phone:'+7 921 444-56-78',email:'o.morozova@mail.ru',reg:'2024-04-05',status:'active'},
+  ],
+  trainings:[
+    {id:1,name:'Йога для начинающих',trainer:'Мария Козлова',hall:'Зал 1',datetime:'2025-06-15 10:00',max:15,enrolled:8},
+    {id:2,name:'Силовая тренировка',trainer:'Мария Козлова',hall:'Зал 2',datetime:'2025-06-16 12:00',max:10,enrolled:10},
+    {id:3,name:'Кардио-программа',trainer:'Мария Козлова',hall:'Зал 3',datetime:'2025-06-17 09:00',max:20,enrolled:5},
+  ],
+  abos:[
+    {id:1,name:'Стандарт',cost:3000,days:30},
+    {id:2,name:'Премиум',cost:5500,days:30},
+    {id:3,name:'Годовой',cost:30000,days:365},
+  ],
+  clientAbos:[
+    {id:1,clientId:1,aboId:1,start:'2025-05-01',end:'2025-05-31',num:'AB-0001'},
+    {id:2,clientId:2,aboId:2,start:'2025-06-01',end:'2025-06-30',num:'AB-0002'},
+    {id:3,clientId:4,aboId:3,start:'2025-01-01',end:'2025-12-31',num:'AB-0003'},
+  ],
+  staff:[
+    {id:1,fname:'Иван',lname:'Петров',role:'Администратор',phone:'+7 900 000-00-01',email:'petrov@gym.ru',hired:'2022-01-10'},
+    {id:2,fname:'Алексей',lname:'Смирнов',role:'Директор',phone:'+7 900 000-00-02',email:'smirnov@gym.ru',hired:'2020-05-15'},
+    {id:3,fname:'Мария',lname:'Козлова',role:'Тренер',phone:'+7 900 000-00-03',email:'kozlova@gym.ru',hired:'2023-03-01'},
+  ]
+};
+
+let state = {user:null, page:'clients', subTab:'list'};
+
+const roles = {
+  admin:{label:'Администратор',color:'#185FA5',bg:'#E6F1FB',nav:['clients','trainings','abos','staff','analytics']},
+  director:{label:'Директор',color:'#0F6E56',bg:'#E1F5EE',nav:['clients','trainings','abos','staff','analytics']},
+  trainer:{label:'Тренер',color:'#854F0B',bg:'#FAEEDA',nav:['clients','trainings','abos']}
+};
+
+const navLabels = {clients:'Клиенты',trainings:'Тренировки',abos:'Абонементы',staff:'Сотрудники',analytics:'Аналитика'};
+const navIcons = {clients:'ti-users',trainings:'ti-barbell',abos:'ti-id',staff:'ti-briefcase',analytics:'ti-chart-bar'};
+
+function render() {
+  const r = document.getElementById('root');
+  if(!state.user) { r.innerHTML = renderLogin(); return; }
+  r.innerHTML = renderApp();
+  bindNav();
+}
+
+function renderLogin() {
+  return `<div class="login-wrap">
+    <div class="login-card">
+      <h2>Спортзал</h2>
+      <p>Система управления</p>
+      <div style="margin-bottom:18px">
+        <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Выберите роль для входа:</div>
+        <div class="role-cards">
+          ${DATA.users.map(u=>`<div class="role-card" onclick="loginAs(${u.id})">
+            <i class="ti ${u.role==='admin'?'ti-shield':u.role==='director'?'ti-star':'ti-barbell'}" aria-hidden="true"></i>
+            <span>${roles[u.role].label}</span>
+            <small>${u.login} / ${u.pass}</small>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:18px">
+        <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">Или войдите вручную:</div>
+        <div class="form-group"><label>Логин</label><input id="li" placeholder="логин"></div>
+        <div class="form-group"><label>Пароль</label><input id="lp" type="password" placeholder="пароль"></div>
+        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Войти</button>
+        <p id="lerr" style="font-size:12px;color:#E24B4A;margin-top:8px;display:none">Неверные данные</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderApp() {
+  const u = state.user, ro = roles[u.role];
+  const nav = ro.nav;
+  if(!nav.includes(state.page)) state.page = nav[0];
+  return `<div class="app">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <h2><i class="ti ti-trophy" aria-hidden="true" style="font-size:18px;vertical-align:-2px;margin-right:6px;color:#378ADD"></i>FitManager</h2>
+        <p>Управление спортзалом</p>
+      </div>
+      <div class="sidebar-nav">
+        ${nav.map(p=>`<div class="nav-item${state.page===p?' active':''}" onclick="goto('${p}')">
+          <i class="ti ${navIcons[p]}" aria-hidden="true"></i>${navLabels[p]}
+        </div>`).join('')}
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-badge">
+          <div class="avatar">${u.initials}</div>
+          <div class="user-info">
+            <p>${u.name}</p>
+            <span style="display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;background:${ro.bg};color:${ro.color}">${ro.label}</span>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()"><i class="ti ti-logout" aria-hidden="true"></i>Выйти</button>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <h1>${navLabels[state.page]}</h1>
+        ${renderTopbarAction()}
+      </div>
+      <div class="content">
+        ${renderPage()}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTopbarAction() {
+  const p = state.page, r = state.user.role;
+  if(p==='clients' && r!=='trainer') return `<button class="btn btn-primary btn-sm" onclick="openModal('addClient')"><i class="ti ti-plus" aria-hidden="true"></i> Добавить клиента</button>`;
+  if(p==='trainings' && (r==='admin'||r==='director')) return `<button class="btn btn-primary btn-sm" onclick="openModal('addTraining')"><i class="ti ti-plus" aria-hidden="true"></i> Новая тренировка</button>`;
+  if(p==='abos' && r!=='trainer') return `<button class="btn btn-primary btn-sm" onclick="openModal('addAboType')"><i class="ti ti-plus" aria-hidden="true"></i> Новый тип</button>`;
+  if(p==='staff' && r==='admin') return `<button class="btn btn-primary btn-sm" onclick="openModal('addStaff')"><i class="ti ti-plus" aria-hidden="true"></i> Добавить сотрудника</button>`;
+  return '';
+}
+
+function renderPage() {
+  switch(state.page) {
+    case 'clients': return renderClients();
+    case 'trainings': return renderTrainings();
+    case 'abos': return renderAbos();
+    case 'staff': return renderStaff();
+    case 'analytics': return renderAnalytics();
+    default: return '<div class="empty">Раздел в разработке</div>';
+  }
+}
+
+function renderClients() {
+  const r = state.user.role;
+  return `<div class="card">
+    <table>
+      <thead><tr>
+        <th>Клиент</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Дата регистрации</th>${r!=='trainer'?'<th></th>':''}
+      </tr></thead>
+      <tbody>
+        ${DATA.clients.map(c=>`<tr>
+          <td><div style="display:flex;align-items:center;gap:10px">
+            <div class="avatar" style="width:30px;height:30px;font-size:11px">${c.lname[0]+c.fname[0]}</div>
+            <span>${c.lname} ${c.fname}</span>
+          </div></td>
+          <td>${c.phone}</td>
+          <td style="color:var(--color-text-secondary)">${c.email}</td>
+          <td><span class="badge ${c.status==='active'?'badge-active':'badge-inactive'}">${c.status==='active'?'Активен':'Неактивен'}</span></td>
+          <td style="color:var(--color-text-secondary)">${c.reg}</td>
+          ${r!=='trainer'?`<td><button class="btn-danger" onclick="deleteClient(${c.id})"><i class="ti ti-trash" aria-hidden="true"></i></button></td>`:''}
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    ${DATA.clients.length===0?'<div class="empty">Нет клиентов</div>':''}
+  </div>`;
+}
+
+function renderTrainings() {
+  return `<div class="card">
+    <table>
+      <thead><tr>
+        <th>Тренировка</th><th>Тренер</th><th>Зал</th><th>Дата и время</th><th>Участники</th><th>Статус</th>
+      </tr></thead>
+      <tbody>
+        ${DATA.trainings.map(t=>`<tr>
+          <td style="font-weight:500">${t.name}</td>
+          <td>${t.trainer}</td>
+          <td style="color:var(--color-text-secondary)">${t.hall}</td>
+          <td style="color:var(--color-text-secondary)">${t.datetime}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;min-width:60px">
+                <div style="height:4px;border-radius:2px;background:${t.enrolled>=t.max?'#E24B4A':'#378ADD'};width:${Math.round(t.enrolled/t.max*100)}%"></div>
+              </div>
+              <span style="font-size:12px;color:var(--color-text-secondary)">${t.enrolled}/${t.max}</span>
+            </div>
+          </td>
+          <td><span class="badge ${t.enrolled>=t.max?'badge-pending':'badge-active'}">${t.enrolled>=t.max?'Набор закрыт':'Открыта запись'}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function renderAbos() {
+  const r = state.user.role;
+  return `<div style="display:grid;gap:16px">
+    <div class="card">
+      <div class="card-header"><h3>Типы абонементов</h3></div>
+      <table>
+        <thead><tr><th>Название</th><th>Стоимость</th><th>Срок (дней)</th>${r!=='trainer'?'<th></th>':''}</tr></thead>
+        <tbody>
+          ${DATA.abos.map(a=>`<tr>
+            <td style="font-weight:500">${a.name}</td>
+            <td>${a.cost.toLocaleString('ru-RU')} ₽</td>
+            <td>${a.days} дн.</td>
+            ${r!=='trainer'?`<td><button class="btn-danger" onclick="deleteAbo(${a.id})"><i class="ti ti-trash" aria-hidden="true"></i></button></td>`:''}
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Абонементы клиентов</h3>${r!=='trainer'?`<button class="btn btn-outline btn-sm" onclick="openModal('assignAbo')"><i class="ti ti-plus" aria-hidden="true"></i> Выдать</button>`:''}</div>
+      <table>
+        <thead><tr><th>Клиент</th><th>Абонемент</th><th>Начало</th><th>Окончание</th><th>Номер</th></tr></thead>
+        <tbody>
+          ${DATA.clientAbos.map(ca=>{
+            const cl = DATA.clients.find(c=>c.id===ca.clientId);
+            const ab = DATA.abos.find(a=>a.id===ca.aboId);
+            const now = new Date(), end = new Date(ca.end);
+            const expired = end < now;
+            return `<tr>
+              <td>${cl?cl.lname+' '+cl.fname:'—'}</td>
+              <td>${ab?ab.name:'—'}</td>
+              <td style="color:var(--color-text-secondary)">${ca.start}</td>
+              <td style="color:var(--color-text-secondary)">${ca.end}</td>
+              <td><span class="badge ${expired?'badge-inactive':'badge-active'}">${ca.num}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function renderStaff() {
+  if(!['admin','director'].includes(state.user.role)) return `<div class="access-denied"><i class="ti ti-lock" aria-hidden="true"></i><p>Нет доступа к этому разделу</p></div>`;
+  return `<div class="card">
+    <table>
+      <thead><tr><th>Сотрудник</th><th>Должность</th><th>Телефон</th><th>Email</th><th>Принят</th>${state.user.role==='admin'?'<th></th>':''}</tr></thead>
+      <tbody>
+        ${DATA.staff.map(s=>`<tr>
+          <td><div style="display:flex;align-items:center;gap:10px">
+            <div class="avatar" style="width:30px;height:30px;font-size:11px">${s.lname[0]+s.fname[0]}</div>
+            <span>${s.lname} ${s.fname}</span>
+          </div></td>
+          <td><span class="badge badge-pending">${s.role}</span></td>
+          <td>${s.phone}</td>
+          <td style="color:var(--color-text-secondary)">${s.email}</td>
+          <td style="color:var(--color-text-secondary)">${s.hired}</td>
+          ${state.user.role==='admin'?`<td><button class="btn-danger" onclick="deleteStaff(${s.id})"><i class="ti ti-trash" aria-hidden="true"></i></button></td>`:''}
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function renderAnalytics() {
+  const totalRev = DATA.clientAbos.reduce((s,ca)=>{const a=DATA.abos.find(x=>x.id===ca.aboId);return s+(a?a.cost:0)},0);
+  const activeClients = DATA.clients.filter(c=>c.status==='active').length;
+  const openTrainings = DATA.trainings.filter(t=>t.enrolled<t.max).length;
+  return `<div style="display:grid;gap:16px">
+    <div class="metrics">
+      <div class="metric-card"><div class="label">Клиентов всего</div><div class="value">${DATA.clients.length}</div><div class="sub">${activeClients} активных</div></div>
+      <div class="metric-card"><div class="label">Выручка (абонементы)</div><div class="value">${totalRev.toLocaleString('ru-RU')} ₽</div><div class="sub">за все время</div></div>
+      <div class="metric-card"><div class="label">Тренировок</div><div class="value">${DATA.trainings.length}</div><div class="sub">${openTrainings} открыто для записи</div></div>
+      <div class="metric-card"><div class="label">Сотрудников</div><div class="value">${DATA.staff.length}</div><div class="sub">в штате</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><h3>Популярность абонементов</h3></div>
+        ${DATA.abos.map(a=>{
+          const cnt = DATA.clientAbos.filter(ca=>ca.aboId===a.id).length;
+          const pct = DATA.clientAbos.length ? Math.round(cnt/DATA.clientAbos.length*100) : 0;
+          return `<div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+              <span>${a.name}</span><span style="color:var(--color-text-secondary)">${cnt} шт.</span>
+            </div>
+            <div style="height:6px;background:var(--color-background-secondary);border-radius:3px">
+              <div style="height:6px;border-radius:3px;background:#378ADD;width:${pct}%"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Заполненность тренировок</h3></div>
+        ${DATA.trainings.map(t=>{
+          const pct = Math.round(t.enrolled/t.max*100);
+          return `<div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+              <span>${t.name}</span><span style="color:var(--color-text-secondary)">${pct}%</span>
+            </div>
+            <div style="height:6px;background:var(--color-background-secondary);border-radius:3px">
+              <div style="height:6px;border-radius:3px;background:${pct>=100?'#E24B4A':pct>70?'#EF9F27':'#1D9E75'};width:${pct}%"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function openModal(type) {
+  const m = document.getElementById('modal');
+  const mc = document.getElementById('modal-content');
+  let html = '';
+  if(type==='addClient') {
+    html = `<h3>Новый клиент</h3>
+      <div class="grid-2">
+        <div class="form-group"><label>Фамилия</label><input id="m-lname" placeholder="Иванов"></div>
+        <div class="form-group"><label>Имя</label><input id="m-fname" placeholder="Иван"></div>
+      </div>
+      <div class="form-group"><label>Телефон</label><input id="m-phone" placeholder="+7 900 000-00-00"></div>
+      <div class="form-group"><label>Email</label><input id="m-email" placeholder="ivan@mail.ru"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Отмена</button>
+        <button class="btn btn-primary" onclick="saveClient()">Добавить</button>
+      </div>`;
+  } else if(type==='addTraining') {
+    html = `<h3>Новая тренировка</h3>
+      <div class="form-group"><label>Название</label><input id="m-tname" placeholder="Название тренировки"></div>
+      <div class="grid-2">
+        <div class="form-group"><label>Зал</label><input id="m-thall" placeholder="Зал 1"></div>
+        <div class="form-group"><label>Дата и время</label><input id="m-tdt" placeholder="2025-07-01 10:00"></div>
+      </div>
+      <div class="form-group"><label>Макс. участников</label><input id="m-tmax" type="number" placeholder="15" min="1"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Отмена</button>
+        <button class="btn btn-primary" onclick="saveTraining()">Создать</button>
+      </div>`;
+  } else if(type==='addAboType') {
+    html = `<h3>Новый тип абонемента</h3>
+      <div class="form-group"><label>Название</label><input id="m-aname" placeholder="Стандарт"></div>
+      <div class="grid-2">
+        <div class="form-group"><label>Стоимость (₽)</label><input id="m-acost" type="number" placeholder="3000"></div>
+        <div class="form-group"><label>Срок (дней)</label><input id="m-adays" type="number" placeholder="30"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Отмена</button>
+        <button class="btn btn-primary" onclick="saveAboType()">Добавить</button>
+      </div>`;
+  } else if(type==='assignAbo') {
+    html = `<h3>Выдать абонемент</h3>
+      <div class="form-group"><label>Клиент</label><select id="m-aclient">
+        ${DATA.clients.map(c=>`<option value="${c.id}">${c.lname} ${c.fname}</option>`).join('')}
+      </select></div>
+      <div class="form-group"><label>Тип абонемента</label><select id="m-atype">
+        ${DATA.abos.map(a=>`<option value="${a.id}">${a.name} — ${a.cost.toLocaleString('ru-RU')} ₽</option>`).join('')}
+      </select></div>
+      <div class="form-group"><label>Дата начала</label><input id="m-astart" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Отмена</button>
+        <button class="btn btn-primary" onclick="saveAssignAbo()">Выдать</button>
+      </div>`;
+  } else if(type==='addStaff') {
+    html = `<h3>Новый сотрудник</h3>
+      <div class="grid-2">
+        <div class="form-group"><label>Фамилия</label><input id="m-slname" placeholder="Иванов"></div>
+        <div class="form-group"><label>Имя</label><input id="m-sfname" placeholder="Иван"></div>
+      </div>
+      <div class="form-group"><label>Должность</label><input id="m-srole" placeholder="Тренер"></div>
+      <div class="form-group"><label>Email</label><input id="m-semail" placeholder="ivan@gym.ru"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Отмена</button>
+        <button class="btn btn-primary" onclick="saveStaff()">Добавить</button>
+      </div>`;
+  }
+  mc.innerHTML = html;
+  m.classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function saveClient() {
+  const fn=document.getElementById('m-fname').value, ln=document.getElementById('m-lname').value;
+  if(!fn||!ln) return;
+  DATA.clients.push({id:Date.now(),fname:fn,lname:ln,phone:document.getElementById('m-phone').value,email:document.getElementById('m-email').value,reg:new Date().toISOString().split('T')[0],status:'active'});
+  closeModal(); render();
+}
+function saveTraining() {
+  const n=document.getElementById('m-tname').value;
+  if(!n) return;
+  DATA.trainings.push({id:Date.now(),name:n,trainer:state.user.name,hall:document.getElementById('m-thall').value,datetime:document.getElementById('m-tdt').value,max:parseInt(document.getElementById('m-tmax').value)||10,enrolled:0});
+  closeModal(); render();
+}
+function saveAboType() {
+  const n=document.getElementById('m-aname').value;
+  if(!n) return;
+  DATA.abos.push({id:Date.now(),name:n,cost:parseInt(document.getElementById('m-acost').value)||0,days:parseInt(document.getElementById('m-adays').value)||30});
+  closeModal(); render();
+}
+function saveAssignAbo() {
+  const cId=parseInt(document.getElementById('m-aclient').value), aId=parseInt(document.getElementById('m-atype').value), start=document.getElementById('m-astart').value;
+  const abo = DATA.abos.find(a=>a.id===aId);
+  const end = new Date(start); end.setDate(end.getDate()+(abo?abo.days:30));
+  DATA.clientAbos.push({id:Date.now(),clientId:cId,aboId:aId,start,end:end.toISOString().split('T')[0],num:'AB-'+String(Date.now()).slice(-4)});
+  closeModal(); render();
+}
+function saveStaff() {
+  const fn=document.getElementById('m-sfname').value, ln=document.getElementById('m-slname').value;
+  if(!fn||!ln) return;
+  DATA.staff.push({id:Date.now(),fname:fn,lname:ln,role:document.getElementById('m-srole').value||'Сотрудник',phone:'—',email:document.getElementById('m-semail').value,hired:new Date().toISOString().split('T')[0]});
+  closeModal(); render();
+}
+function deleteClient(id) { DATA.clients = DATA.clients.filter(c=>c.id!==id); render(); }
+function deleteAbo(id) { DATA.abos = DATA.abos.filter(a=>a.id!==id); render(); }
+function deleteStaff(id) { DATA.staff = DATA.staff.filter(s=>s.id!==id); render(); }
+
+function loginAs(id) {
+  state.user = DATA.users.find(u=>u.id===id);
+  state.page = roles[state.user.role].nav[0];
+  render();
+}
+function doLogin() {
+  const l=document.getElementById('li').value, p=document.getElementById('lp').value;
+  const u = DATA.users.find(x=>x.login===l&&x.pass===p);
+  if(u) { state.user=u; state.page=roles[u.role].nav[0]; render(); }
+  else { document.getElementById('lerr').style.display='block'; }
+}
+function logout() { state.user=null; render(); }
+function goto(page) { state.page=page; render(); }
+function bindNav() {}
+
+document.getElementById('modal').addEventListener('click', e => { if(e.target===document.getElementById('modal')) closeModal(); });
+render();
+</script>
