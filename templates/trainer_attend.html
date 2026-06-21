@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Отметка посещения{% endblock %}
+{% block topbar_action %}<a href="/trainer/trainings" class="btn btn-outline btn-sm">← Назад</a>{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>{{ training[4] }} — {{ training[3].strftime('%d.%m.%Y %H:%M') if training[3] else '' }}</h3>
+  </div>
+  <table>
+    <thead><tr><th>Клиент</th><th>Записался</th><th>Посещение</th><th></th></tr></thead>
+    <tbody>
+      {% for c in clients %}
+      <tr>
+        <td>{{ c[1] }} {{ c[2] }}</td>
+        <td style="color:var(--color-text-secondary)">{{ c[3].strftime('%d.%m.%Y') if c[3] else '—' }}</td>
+        <td>
+          {% if c[4] %}<span class="badge badge-active">Был</span>
+          {% else %}<span class="badge badge-inactive">Не отмечен</span>{% endif %}
+        </td>
+        <td>
+          <form method="POST" action="/trainer/trainings/{{ training[0] }}/attend">
+            <input type="hidden" name="client_id" value="{{ c[0] }}">
+            <input type="hidden" name="attended" value="{{ '0' if c[4] else '1' }}">
+            <button type="submit" class="btn-warning">{{ 'Снять' if c[4] else 'Отметить' }}</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not clients %}<div class="empty">Никто не записан</div>{% endif %}
+</div>
+{% endblock %}

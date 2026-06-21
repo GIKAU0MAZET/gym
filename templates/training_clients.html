@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Список тренировки{% endblock %}
+{% block topbar_action %}
+<a href="/trainings" class="btn btn-outline btn-sm">← Назад</a>
+{% endblock %}
+{% block content %}
+<div class="card" style="margin-bottom:16px">
+  <div class="card-header"><h3>Записать клиента</h3></div>
+  <form method="POST" action="/trainings/{{ training_id }}/enroll" style="display:flex;gap:10px;align-items:flex-end">
+    <div class="form-group" style="flex:1;margin-bottom:0">
+      <label>Клиент</label>
+      <select name="client_id" required>
+        <option value="">— выберите —</option>
+        {% for c in clients %}
+        <option value="{{ c[0] }}">{{ c[1] }} {{ c[2] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Записать</button>
+  </form>
+</div>
+<div class="card">
+  <div class="card-header"><h3>Записавшиеся</h3></div>
+  <table>
+    <thead><tr><th>Клиент</th><th>Дата записи</th><th>Посещение</th><th></th></tr></thead>
+    <tbody>
+      {% for c in enrolled %}
+      <tr>
+        <td>{{ c[1] }} {{ c[2] }}</td>
+        <td style="color:var(--color-text-secondary)">{{ c[3].strftime('%d.%m.%Y') if c[3] else '—' }}</td>
+        <td>
+          {% if c[4] %}<span class="badge badge-active">Был</span>
+          {% else %}<span class="badge badge-inactive">Не отмечен</span>{% endif %}
+        </td>
+        <td><div class="td-actions">
+          <form method="POST" action="/trainings/{{ training_id }}/attend">
+            <input type="hidden" name="client_id" value="{{ c[0] }}">
+            <input type="hidden" name="attended" value="{{ '0' if c[4] else '1' }}">
+            <button type="submit" class="btn-warning">
+              {{ 'Снять отметку' if c[4] else 'Отметить' }}
+            </button>
+          </form>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not enrolled %}<div class="empty">Никто не записан</div>{% endif %}
+</div>
+{% endblock %}

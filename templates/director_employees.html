@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Персонал{% endblock %}
+{% block topbar_action %}
+<a href="/director/employees/add" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i>Добавить сотрудника</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead><tr><th>Сотрудник</th><th>Должность</th><th>Телефон</th><th>Email</th><th>Принят</th><th></th></tr></thead>
+    <tbody>
+      {% for e in employees %}
+      <tr>
+        <td><div style="display:flex;align-items:center;gap:10px">
+          <div class="avatar" style="width:30px;height:30px;font-size:11px">{{ e[1][0] }}{{ e[2][0] }}</div>
+          <span>{{ e[1] }} {{ e[2] }} {{ e[3] or '' }}</span>
+        </div></td>
+        <td><span class="badge badge-pending">{{ e[4] }}</span></td>
+        <td>{{ e[5] or '—' }}</td>
+        <td style="color:var(--color-text-secondary)">{{ e[6] or '—' }}</td>
+        <td style="color:var(--color-text-secondary)">{{ e[7].strftime('%d.%m.%Y') if e[7] else '—' }}</td>
+        <td><a href="/director/employees/edit/{{ e[0] }}" class="btn-warning"><i class="ti ti-pencil"></i>Изменить</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not employees %}<div class="empty">Нет сотрудников</div>{% endif %}
+</div>
+{% endblock %}

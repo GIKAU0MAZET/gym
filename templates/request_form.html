@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Редактировать заявку' if req else 'Новая заявка' }}{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <form method="POST">
+    <div class="form-group"><label>Клиент *</label>
+      <select name="client_id" required>
+        <option value="">— выберите —</option>
+        {% for c in clients %}
+        <option value="{{ c[0] }}" {% if req and req[1]==c[0] %}selected{% endif %}>{{ c[1] }} {{ c[2] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group"><label>Тип абонемента *</label>
+      <select name="type_id" required>
+        <option value="">— выберите —</option>
+        {% for t in types %}
+        <option value="{{ t[0] }}" {% if req and req[2]==t[0] %}selected{% endif %}>{{ t[1] }} — {{ t[2] }} ₽</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if req %}
+    <div class="form-group"><label>Статус</label>
+      <select name="status">
+        {% for s in ['Новая','На рассмотрении','Одобрена','Выполнена','Отклонена'] %}
+        <option {% if req[5]==s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    <div style="display:flex;gap:10px">
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a href="/requests" class="btn btn-outline">Отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

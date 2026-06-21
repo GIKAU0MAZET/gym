@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card">
+    <h2><i class="ti ti-trophy" style="color:#378ADD;margin-right:6px"></i>FitManager</h2>
+    <p>Система управления спортзалом</p>
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label>Логин</label>
+        <input type="text" name="login" placeholder="Введите логин" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" name="password" placeholder="Введите пароль" required>
+      </div>
+      {% if error %}
+      <p class="form-error">{{ error }}</p>
+      {% endif %}
+      <button type="submit" class="btn btn-primary" style="width:100%">Войти</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

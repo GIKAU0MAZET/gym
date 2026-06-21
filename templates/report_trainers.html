@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Тренировки тренеров{% endblock %}
+{% block topbar_action %}<a href="/director/reports" class="btn btn-outline btn-sm">← Назад</a>{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead><tr><th>Тренер</th><th>Тренировок</th><th>Клиентов всего</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not rows %}<div class="empty">Нет данных</div>{% endif %}
+</div>
+{% endblock %}

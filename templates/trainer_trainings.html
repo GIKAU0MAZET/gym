@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Мои тренировки{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead><tr><th>Название</th><th>Дата и время</th><th>Участники</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+      {% for t in trainings %}
+      {% set pct = (t[4] / t[3] * 100)|int if t[3] else 0 %}
+      <tr>
+        <td style="font-weight:500">{{ t[1] }}</td>
+        <td style="color:var(--color-text-secondary)">{{ t[2].strftime('%d.%m.%Y %H:%M') if t[2] else '—' }}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;min-width:60px">
+              <div style="height:4px;border-radius:2px;background:#378ADD;width:{{ [pct,100]|min }}%"></div>
+            </div>
+            <span style="font-size:12px;color:var(--color-text-secondary)">{{ t[4] }}/{{ t[3] }}</span>
+          </div>
+        </td>
+        <td>
+          {% if t[2] and t[2] < now %}
+            <span class="badge badge-inactive">Завершена</span>
+          {% else %}
+            <span class="badge badge-active">Предстоит</span>
+          {% endif %}
+        </td>
+        <td><a href="/trainer/trainings/{{ t[0] }}/attend" class="btn-warning"><i class="ti ti-check"></i>Отметить</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not trainings %}<div class="empty">Нет тренировок</div>{% endif %}
+</div>
+{% endblock %}

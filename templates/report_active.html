@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Активные абонементы{% endblock %}
+{% block topbar_action %}<a href="/director/reports" class="btn btn-outline btn-sm">← Назад</a>{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead><tr><th>Клиент</th><th>Тип</th><th>Начало</th><th>Окончание</th><th>Номер</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td style="color:var(--color-text-secondary)">{{ r[2].strftime('%d.%m.%Y') if r[2] else '—' }}</td>
+        <td style="color:var(--color-text-secondary)">{{ r[3].strftime('%d.%m.%Y') if r[3] else '—' }}</td>
+        <td><span class="badge badge-active">{{ r[4] }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not rows %}<div class="empty">Нет активных абонементов</div>{% endif %}
+</div>
+{% endblock %}

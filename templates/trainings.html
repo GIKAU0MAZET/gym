@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Тренировки{% endblock %}
+{% block topbar_action %}
+<a href="/trainings/add" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i>Новая тренировка</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead><tr><th>Название</th><th>Тренер</th><th>Дата и время</th><th>Участники</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+      {% for t in trainings %}
+      {% set pct = (t[5] / t[4] * 100)|int if t[4] else 0 %}
+      <tr>
+        <td style="font-weight:500">{{ t[1] }}</td>
+        <td>{{ t[2] }}</td>
+        <td style="color:var(--color-text-secondary)">{{ t[3].strftime('%d.%m.%Y %H:%M') if t[3] else '—' }}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;min-width:60px">
+              <div style="height:4px;border-radius:2px;background:{{ '#E24B4A' if pct>=100 else '#378ADD' }};width:{{ [pct,100]|min }}%"></div>
+            </div>
+            <span style="font-size:12px;color:var(--color-text-secondary)">{{ t[5] }}/{{ t[4] }}</span>
+          </div>
+        </td>
+        <td>
+          {% if t[5] >= t[4] %}<span class="badge badge-pending">Набор закрыт</span>
+          {% else %}<span class="badge badge-active">Открыта запись</span>{% endif %}
+        </td>
+        <td><div class="td-actions">
+          <a href="/trainings/{{ t[0] }}/clients" class="btn-warning"><i class="ti ti-users"></i>Список</a>
+          <a href="/trainings/edit/{{ t[0] }}" class="btn-warning"><i class="ti ti-pencil"></i>Изменить</a>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not trainings %}<div class="empty">Нет тренировок</div>{% endif %}
+</div>
+{% endblock %}

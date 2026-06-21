@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}О тренажёрном зале{% endblock %}
+{% block content %}
+<div class="card form-card">
+  {% if info %}
+  <table>
+    <tbody>
+      <tr><td style="color:var(--color-text-secondary);width:200px">Название</td><td>{{ info[0] }}</td></tr>
+      <tr><td style="color:var(--color-text-secondary)">Email</td><td>{{ info[1] or '—' }}</td></tr>
+      <tr><td style="color:var(--color-text-secondary)">Телефон</td><td>{{ info[2] or '—' }}</td></tr>
+      <tr><td style="color:var(--color-text-secondary)">Юр. адрес</td><td>{{ info[3] or '—' }}</td></tr>
+      <tr><td style="color:var(--color-text-secondary)">Факт. адрес</td><td>{{ info[4] or '—' }}</td></tr>
+      <tr><td style="color:var(--color-text-secondary)">Директор</td><td>{{ info[5] or '—' }}</td></tr>
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">Нет данных о зале</div>
+  {% endif %}
+</div>
+{% endblock %}

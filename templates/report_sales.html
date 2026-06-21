@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Продажи абонементов{% endblock %}
+{% block topbar_action %}<a href="/director/reports" class="btn btn-outline btn-sm">← Назад</a>{% endblock %}
+{% block content %}
+<div class="card form-card" style="margin-bottom:16px">
+  <form method="GET" style="display:flex;gap:12px;align-items:flex-end">
+    <div class="form-group" style="margin-bottom:0;flex:1">
+      <label>С</label>
+      <input type="date" name="date_from" value="{{ date_from }}">
+    </div>
+    <div class="form-group" style="margin-bottom:0;flex:1">
+      <label>По</label>
+      <input type="date" name="date_to" value="{{ date_to }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Применить</button>
+  </form>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>Тип абонемента</th><th>Продаж</th><th>Выручка</th></tr></thead>
+    <tbody>
+      {% set total = namespace(sum=0) %}
+      {% for r in rows %}
+      {% set total.sum = total.sum + r[2] %}
+      <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ "{:,.0f}".format(r[2]) }} ₽</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    {% if rows %}
+    <tfoot>
+      <tr style="font-weight:600;border-top:1px solid var(--color-border-tertiary)">
+        <td>Итого</td><td></td><td>{{ "{:,.0f}".format(total.sum) }} ₽</td>
+      </tr>
+    </tfoot>
+    {% endif %}
+  </table>
+  {% if not rows %}<div class="empty">Нет данных за период</div>{% endif %}
+</div>
+{% endblock %}

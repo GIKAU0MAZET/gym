@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Клиенты{% endblock %}
+{% block topbar_action %}
+<a href="/clients/add" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i>Добавить клиента</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead><tr>
+      <th>Клиент</th><th>Телефон</th><th>Email</th><th>Дата регистрации</th><th></th>
+    </tr></thead>
+    <tbody>
+      {% for c in clients %}
+      <tr>
+        <td><div style="display:flex;align-items:center;gap:10px">
+          <div class="avatar" style="width:30px;height:30px;font-size:11px">{{ c[1][0] }}{{ c[2][0] }}</div>
+          <span>{{ c[1] }} {{ c[2] }} {{ c[3] or '' }}</span>
+        </div></td>
+        <td>{{ c[4] or '—' }}</td>
+        <td style="color:var(--color-text-secondary)">{{ c[5] or '—' }}</td>
+        <td style="color:var(--color-text-secondary)">{{ c[6].strftime('%d.%m.%Y') if c[6] else '—' }}</td>
+        <td><div class="td-actions">
+          <a href="/clients/edit/{{ c[0] }}" class="btn-warning"><i class="ti ti-pencil"></i>Изменить</a>
+        </div></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not clients %}<div class="empty">Нет клиентов</div>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Продажа абонемента{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <form method="POST">
+    <div class="form-group"><label>Клиент *</label>
+      <select name="client_id" required>
+        <option value="">— выберите —</option>
+        {% for c in clients %}
+        <option value="{{ c[0] }}" {% if selected_client==c[0] %}selected{% endif %}>{{ c[1] }} {{ c[2] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group"><label>Тип абонемента *</label>
+      <select name="type_id" id="type_id" required onchange="updateDays()">
+        <option value="">— выберите —</option>
+        {% for t in types %}
+        <option value="{{ t[0] }}" data-days="{{ t[3] }}" {% if selected_type==t[0] %}selected{% endif %}>
+          {{ t[1] }} — {{ t[2] }} ₽ / {{ t[3] }} дн.
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if request_id %}<input type="hidden" name="request_id" value="{{ request_id }}">{% endif %}
+    <div class="form-group"><label>Дата начала *</label>
+      <input type="date" name="start_date" id="start_date" required
+             value="{{ today }}" onchange="updateEnd()">
+    </div>
+    <div class="form-group"><label>Дата окончания</label>
+      <input type="text" id="end_preview" class="form-group" readonly
+             style="background:var(--color-background-secondary);padding:9px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:14px;width:100%"
+             value="—">
+    </div>
+    <div style="display:flex;gap:10px">
+      <button type="submit" class="btn btn-primary">Продать</button>
+      <a href="/abonements" class="btn btn-outline">Отмена</a>
+    </div>
+  </form>
+</div>
+<script>
+function updateDays(){updateEnd()}
+function updateEnd(){
+  const sel=document.getElementById('type_id');
+  const opt=sel.options[sel.selectedIndex];
+  const days=parseInt(opt&&opt.dataset.days||0);
+  const start=document.getElementById('start_date').value;
+  if(days&&start){
+    const d=new Date(start);d.setDate(d.getDate()+days);
+    document.getElementById('end_preview').value=d.toLocaleDateString('ru-RU');
+  }else{document.getElementById('end_preview').value='—';}
+}
+updateEnd();
+</script>
+{% endblock %}

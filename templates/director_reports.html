@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Отчёты{% endblock %}
+{% block content %}
+<div class="grid-2">
+  <a href="/director/reports/sales" style="text-decoration:none">
+    <div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='#378ADD'" onmouseout="this.style.borderColor=''">
+      <div style="font-size:28px;margin-bottom:10px">💰</div>
+      <h3 style="font-size:15px;margin-bottom:6px">Продажи абонементов</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary)">Выручка за выбранный период по типам</p>
+    </div>
+  </a>
+  <a href="/director/reports/active" style="text-decoration:none">
+    <div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='#378ADD'" onmouseout="this.style.borderColor=''">
+      <div style="font-size:28px;margin-bottom:10px">🪪</div>
+      <h3 style="font-size:15px;margin-bottom:6px">Активные абонементы</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary)">Клиенты с действующими абонементами</p>
+    </div>
+  </a>
+  <a href="/director/reports/trainers" style="text-decoration:none">
+    <div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='#378ADD'" onmouseout="this.style.borderColor=''">
+      <div style="font-size:28px;margin-bottom:10px">🏋️</div>
+      <h3 style="font-size:15px;margin-bottom:6px">Тренировки тренеров</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary)">Количество тренировок и клиентов по тренерам</p>
+    </div>
+  </a>
+</div>
+{% endblock %}

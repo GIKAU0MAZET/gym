@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ gym_name or 'FitManager' }}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h2><i class="ti ti-trophy" style="color:#378ADD;margin-right:6px"></i>{{ gym_name or 'FitManager' }}</h2>
+      <p>Система управления</p>
+    </div>
+
+    <div class="sidebar-nav">
+      {% set role = session.get('role') %}
+
+      {% if role == 'Администратор' %}
+        <a href="/clients" class="nav-item {% if request.path.startswith('/clients') %}active{% endif %}">
+          <i class="ti ti-users"></i>Клиенты
+        </a>
+        <a href="/requests" class="nav-item {% if request.path.startswith('/requests') %}active{% endif %}">
+          <i class="ti ti-clipboard-list"></i>Заявки
+        </a>
+        <a href="/abonements" class="nav-item {% if request.path.startswith('/abonements') %}active{% endif %}">
+          <i class="ti ti-id"></i>Абонементы
+        </a>
+        <a href="/trainings" class="nav-item {% if request.path.startswith('/trainings') %}active{% endif %}">
+          <i class="ti ti-barbell"></i>Тренировки
+        </a>
+
+      {% elif role == 'Директор' %}
+        <a href="/director/employees" class="nav-item {% if request.path.startswith('/director/employees') %}active{% endif %}">
+          <i class="ti ti-briefcase"></i>Персонал
+        </a>
+        <a href="/director/gym-info" class="nav-item {% if request.path.startswith('/director/gym-info') %}active{% endif %}">
+          <i class="ti ti-building"></i>О зале
+        </a>
+        <a href="/director/requests" class="nav-item {% if request.path.startswith('/director/requests') %}active{% endif %}">
+          <i class="ti ti-clipboard-list"></i>Заявки
+        </a>
+        <a href="/director/reports" class="nav-item {% if request.path.startswith('/director/reports') %}active{% endif %}">
+          <i class="ti ti-chart-bar"></i>Отчёты
+        </a>
+
+      {% elif role == 'Тренер' %}
+        <a href="/trainer/trainings" class="nav-item {% if request.path.startswith('/trainer/trainings') %}active{% endif %}">
+          <i class="ti ti-barbell"></i>Мои тренировки
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-badge">
+        <div class="avatar">{{ current_user[:2] if current_user else '?' }}</div>
+        <div class="user-info">
+          <p>{{ current_user or '—' }}</p>
+          <span class="role-badge" style="background:#E6F1FB;color:#185FA5">{{ session.get('role','') }}</span>
+        </div>
+      </div>
+      <a href="/logout" class="logout-btn">
+        <i class="ti ti-logout"></i>Выйти
+      </a>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>{% block title %}{% endblock %}</h1>
+      <div>{% block topbar_action %}{% endblock %}</div>
+    </div>
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

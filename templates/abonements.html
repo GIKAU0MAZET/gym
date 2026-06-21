@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Абонементы{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>Абонементы клиентов</h3>
+    <a href="/abonements/sell" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i>Продать абонемент</a>
+  </div>
+  <table>
+    <thead><tr><th>Клиент</th><th>Тип</th><th>Стоимость</th><th>Начало</th><th>Окончание</th><th>Номер</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+      {% for a in abonements %}
+      {% set expired = a[5] < today %}
+      <tr>
+        <td>{{ a[1] }}</td>
+        <td>{{ a[2] }}</td>
+        <td>{{ a[3] }} ₽</td>
+        <td style="color:var(--color-text-secondary)">{{ a[4].strftime('%d.%m.%Y') if a[4] else '—' }}</td>
+        <td style="color:var(--color-text-secondary)">{{ a[5].strftime('%d.%m.%Y') if a[5] else '—' }}</td>
+        <td><span class="badge {{ 'badge-inactive' if expired else 'badge-active' }}">{{ a[6] }}</span></td>
+        <td><span class="badge {{ 'badge-inactive' if expired else 'badge-active' }}">{{ 'Истёк' if expired else 'Активен' }}</span></td>
+        <td><a href="/abonements/edit/{{ a[0] }}" class="btn-warning"><i class="ti ti-pencil"></i>Изменить</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not abonements %}<div class="empty">Нет абонементов</div>{% endif %}
+</div>
+{% endblock %}

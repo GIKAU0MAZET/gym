@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Редактировать сотрудника' if emp else 'Новый сотрудник' }}{% endblock %}
+{% block content %}
+<div class="card form-card">
+  <form method="POST">
+    <div class="grid-2">
+      <div class="form-group"><label>Фамилия *</label>
+        <input type="text" name="last_name" required value="{{ emp[1] if emp else '' }}">
+      </div>
+      <div class="form-group"><label>Имя *</label>
+        <input type="text" name="first_name" required value="{{ emp[2] if emp else '' }}">
+      </div>
+    </div>
+    <div class="form-group"><label>Отчество</label>
+      <input type="text" name="middle_name" value="{{ emp[3] if emp else '' }}">
+    </div>
+    <div class="form-group"><label>Должность *</label>
+      <select name="position" required>
+        {% for p in ['Администратор','Директор','Тренер'] %}
+        <option {% if emp and emp[4]==p %}selected{% endif %}>{{ p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Телефон</label>
+        <input type="text" name="phone" value="{{ emp[5] if emp else '' }}">
+      </div>
+      <div class="form-group"><label>Email</label>
+        <input type="email" name="email" value="{{ emp[6] if emp else '' }}">
+      </div>
+    </div>
+    <div class="form-group"><label>Дата приёма *</label>
+      <input type="date" name="hire_date" required value="{{ emp[7].strftime('%Y-%m-%d') if emp and emp[7] else '' }}">
+    </div>
+    <div style="display:flex;gap:10px">
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a href="/director/employees" class="btn btn-outline">Отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
