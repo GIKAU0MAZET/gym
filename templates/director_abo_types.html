@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Типы абонементов{% endblock %}
+{% block topbar_action %}
+<a href="/director/abo-types/add" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i>Добавить тип</a>
+{% endblock %}
+{% block content %}
+<div class="card">
+  <table>
+    <thead>
+      <tr><th>Название</th><th>Стоимость</th><th>Срок (дней)</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for t in types %}
+      <tr>
+        <td style="font-weight:500">{{ t[1] }}</td>
+        <td>{{ "{:,.0f}".format(t[2]) }} ₽</td>
+        <td>{{ t[3] }} дн.</td>
+        <td>
+          <a href="/director/abo-types/edit/{{ t[0] }}" class="btn-warning">
+            <i class="ti ti-pencil"></i>Изменить
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not types %}<div class="empty">Нет типов абонементов</div>{% endif %}
+</div>
+{% endblock %}

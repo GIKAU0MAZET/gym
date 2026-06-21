@@ -9,6 +9,8 @@ from service.abonements_service import list_abonement_types, list_client_aboneme
 from service.trainings_service import list_trainings, get_training, create_training, edit_training, get_clients_of_training, add_client_to_training, set_attendance
 from service.director_service import get_gym, list_employees, get_employee, create_employee, edit_employee, report_sales, report_active, report_trainers
 from service.trainer_service import list_my_trainings, get_clients_for_training, set_attendance as trainer_set_attendance
+from repositories.abonement_types_repo import get_all_types, get_type_by_id, add_type, update_type
+from repositories.visits_repo import get_all_visits, add_visit
 
 app = Flask(__name__)
 app.secret_key = "gym_secret_key_2026"
@@ -361,6 +363,53 @@ def trainer_attend(tr_id):
     if err: return err
     trainer_set_attendance(tr_id, request.form["client_id"], request.form["attended"] == "1")
     return redirect(f"/trainer/trainings/{tr_id}/attend")
+
+
+
+# ── ТИПЫ АБОНЕМЕНТОВ (Директор) ──────────────────────────────
+
+@app.route("/director/abo-types")
+def director_abo_types():
+    err = require_role("Директор")
+    if err: return err
+    return render_template("director_abo_types.html", types=get_all_types())
+
+
+@app.route("/director/abo-types/add", methods=["GET", "POST"])
+def director_add_abo_type():
+    err = require_role("Директор")
+    if err: return err
+    if request.method == "POST":
+        add_type(request.form["name"], request.form["cost"], request.form["days"])
+        return redirect("/director/abo-types")
+    return render_template("director_abo_type_form.html", t=None)
+
+
+@app.route("/director/abo-types/edit/<int:type_id>", methods=["GET", "POST"])
+def director_edit_abo_type(type_id):
+    err = require_role("Директор")
+    if err: return err
+    if request.method == "POST":
+        update_type(type_id, request.form["name"], request.form["cost"], request.form["days"])
+        return redirect("/director/abo-types")
+    return render_template("director_abo_type_form.html", t=get_type_by_id(type_id))
+
+
+# ── ПОСЕЩЕНИЯ (Администратор) ─────────────────────────────────
+
+@app.route("/visits")
+def visits():
+    err = require_role("Администратор")
+    if err: return err
+    return render_template("visits.html", visits=get_all_visits(), clients=list_clients())
+
+
+@app.route("/visits/add", methods=["POST"])
+def add_visit_route():
+    err = require_role("Администратор")
+    if err: return err
+    add_visit(request.form["client_id"])
+    return redirect("/visits")
 
 
 if __name__ == "__main__":

@@ -28,6 +28,9 @@
         <a href="/abonements" class="nav-item {% if request.path.startswith('/abonements') %}active{% endif %}">
           <i class="ti ti-id"></i>Абонементы
         </a>
+        <a href="/visits" class="nav-item {% if request.path.startswith('/visits') %}active{% endif %}">
+          <i class="ti ti-door-enter"></i>Посещения
+        </a>
         <a href="/trainings" class="nav-item {% if request.path.startswith('/trainings') %}active{% endif %}">
           <i class="ti ti-barbell"></i>Тренировки
         </a>
@@ -38,6 +41,9 @@
         </a>
         <a href="/director/gym-info" class="nav-item {% if request.path.startswith('/director/gym-info') %}active{% endif %}">
           <i class="ti ti-building"></i>О зале
+        </a>
+        <a href="/director/abo-types" class="nav-item {% if request.path.startswith('/director/abo-types') %}active{% endif %}">
+          <i class="ti ti-id"></i>Типы абонементов
         </a>
         <a href="/director/requests" class="nav-item {% if request.path.startswith('/director/requests') %}active{% endif %}">
           <i class="ti ti-clipboard-list"></i>Заявки

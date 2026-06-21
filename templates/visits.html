@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Посещения{% endblock %}
+{% block content %}
+
+<div class="card form-card" style="margin-bottom:16px">
+  <div class="card-header"><h3>Отметить приход</h3></div>
+  <form method="POST" action="/visits/add" style="display:flex;gap:12px;align-items:flex-end">
+    <div class="form-group" style="flex:1;margin-bottom:0">
+      <label>Клиент</label>
+      <select name="client_id" required>
+        <option value="">— выберите клиента —</option>
+        {% for c in clients %}
+        <option value="{{ c[0] }}">{{ c[1] }} {{ c[2] }} {{ c[3] or '' }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <i class="ti ti-door-enter"></i>Отметить вход
+    </button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-header"><h3>Журнал посещений</h3></div>
+  <table>
+    <thead>
+      <tr><th>Клиент</th><th>Дата и время</th><th>Статус</th></tr>
+    </thead>
+    <tbody>
+      {% for v in visits %}
+      <tr>
+        <td>{{ v[1] }}</td>
+        <td style="color:var(--color-text-secondary)">
+          {{ v[2].strftime('%d.%m.%Y %H:%M') if v[2] else '—' }}
+        </td>
+        <td><span class="badge badge-active">{{ v[3] }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not visits %}<div class="empty">Нет записей</div>{% endif %}
+</div>
+
+{% endblock %}
